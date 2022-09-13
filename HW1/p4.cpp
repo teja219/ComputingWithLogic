@@ -113,7 +113,6 @@ int main()
     // Printing the Output to output.txt file
     freopen("p4Output.dimacs", "w", stdout);
     cout<<"p cnf "<<H_n*G_n<<" "<<result.size()<<endl;
-    cout<<"test"<<endl;
     for(vector<int> clause: result){
         for(int proposition: clause){
             cout<<to_string(proposition)+" ";
