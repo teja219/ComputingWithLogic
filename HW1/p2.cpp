@@ -1,3 +1,7 @@
+//Input format
+//p cnf 3 2 --> 3 is number of distinct propositions,2 is number of clauses
+//-1 2 0  --> (-P_1 or P_2)
+//-2 -3 1 0 --> (-P_2 or -P_3 or P_1)
 #include <iostream>
 #include <vector>
 #include "dimacs.h"//Custom file for reading and writing dimacs data
@@ -9,8 +13,7 @@ int main()
 {
     // For getting input from input.txt file
     freopen("p2Input.txt", "r", stdin); 
-    // Printing the Output to output.txt file
-    freopen("p2Output.dimacs", "w", stdout);
+    
     //Add an additional clause which is a disjunction of all literals
     Dimacs inputDimacs = Dimacs(1);
     //Initializing output dimacs
@@ -26,6 +29,8 @@ int main()
         int zeroes=0;
         int propPositives=0;
         int propNegatives=0;
+        cout<<"----------\n";
+        cout<<"Proposition:"<<proposition<<endl;
         for(vector<int> clause: inputDimacs.clauseDefinitions){
                  int onesPerClause=0;
                  int zeroesPerClause=0;
@@ -42,7 +47,8 @@ int main()
                         if(prop<0) propNegativesPerClause++;
                      }
                  }
-
+                 cout<<"onesPerClause:"<<onesPerClause<<"zeroesPerClause:"<<zeroesPerClause<<endl;
+                 cout<<"propPositivesPerClause:"<<propPositivesPerClause<<"propNegativesPerClause:"<<propNegativesPerClause<<endl;
                  if(onesPerClause>0){
                      ones++;
                  }
@@ -75,10 +81,10 @@ int main()
                 else{
                     outputDimacs.literals++;
                     if(propPositives>0){
-                        outputDimacs.clauseDefinitions[0].push_back(proposition);
+                        outputDimacs.clauseDefinitions[0].push_back(outputDimacs.literals);
                     }
                     else{
-                        outputDimacs.clauseDefinitions[0].push_back(-proposition);
+                        outputDimacs.clauseDefinitions[0].push_back(-outputDimacs.literals);
                     }
                 }
             }
@@ -88,14 +94,19 @@ int main()
         }
     }
     if(tautology){
+        cout<<"tautology"<<endl;
         outputDimacs.literals=1;
         outputDimacs.clauseDefinitions[0] = {1,-1};
     }
     else if(unsatisfiable){
+        cout<<"unsatisfiable"<<endl;
         outputDimacs.literals=1;
+        outputDimacs.clauses=2;
         outputDimacs.clauseDefinitions[0] = {1};
         outputDimacs.clauseDefinitions.push_back({-1});
     }
+    // Printing the Output to output.txt file
+    freopen("p2Output.dimacs", "w", stdout);
     outputDimacs.printDimacs();
 }
 
