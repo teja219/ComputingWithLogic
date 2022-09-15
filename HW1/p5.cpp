@@ -12,11 +12,14 @@ using namespace std;
 
 int main()
 {
+ 	
  	ifstream H_read("graph.txt");
+
  	int K;
  	H_read>>K;
     int H_n,H_m;//Number of vertices and edges in H and G.
     H_read>>H_n>>H_m;
+
     vector<pair<int,int>> H_e;//Edges of H
     for(int i=1;i<=H_m;i++){
         int a,b;
@@ -44,19 +47,22 @@ int main()
     	clauses.push_back({X[i][0],X[i][1]});
     }
 
-    //The partitions should be equal in size
-    vector<int> propositions;
+    //The partitions should be equal in size, 
+    //which implies number of elments in 0th partition is N/2
+    cout<<"----\n";
+    vector<int> propositions(1,0);//Since it is 1 indexed we insert a dummy value at 0th index
     for(int i=1;i<=H_n;i++){
+    	cout<<X[i][0]<<endl;
     	propositions.push_back(X[i][0]);
-    	propositions.push_back(X[i][1]);
     }
+    cout<<"----\n";
 	pair<int,vector<vector<int>>> result = Dimacs(0).atmostKSumClauses(propositions, nextPropositionIndex, (H_n/2), true);
 	nextPropositionIndex = result.first;
 	for(vector<int> c:result.second){
 		clauses.push_back(c);
 	}
 	//Introduce edge proposition Z[1..|E|] 
-	//which is true when both of the vertices of the edge lie on the same partition
+	//which is true when both of the vertices of the edge lie on different partitions
 	vector<int> Z(H_m+1,0);
 	for(int i=1;i<=H_m;i++){
 		Z[i]=nextPropositionIndex;
@@ -82,13 +88,13 @@ int main()
 		});
 	}
 
-	//There should be atmost K edges which are accross partitions
+	// //There should be atmost K edges which are accross partitions
 	result = Dimacs(0).atmostKSumClauses(Z, nextPropositionIndex, K, false);
 	nextPropositionIndex = result.first;
 	for(vector<int> c:result.second){
 		clauses.push_back(c);
 	}
-
+	freopen("p5Output.dimacs", "w", stdout);
 	cout<<"p cnf "<<nextPropositionIndex-1<<" "<<clauses.size()<<endl;
     for(vector<int> clause: clauses){
         for(int proposition: clause){

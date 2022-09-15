@@ -44,9 +44,26 @@ class Dimacs {
            cout<<"0"<<endl;
         }
     }
-    //indexed at 1
-    static pair<int,vector<vector<int>>> atmostKSumClauses(vector<int> propositions,int nextPropositionIndex,int K,bool exactlyK){
+    static pair<int,vector<vector<int>>> equalToK(vector<int> propositions,int nextPropositionIndex,int K){
+        pair<int,vector<vector<int>>> result1 = atmostKSumClauses(propositions,nextPropositionIndex,K);
+        nextPropositionIndex = result1.first;
+        vector<vector<int>> clauses1 = result1.second;
+        for(int i=1;i<=propositions.size()-1;i++) propositions[i]= -propositions[i];
+        int N = propositions.size()-1;
+        pair<int,vector<vector<int>>> result2 = atmostKSumClauses(propositions,nextPropositionIndex,N-K);
+        vector<vector<int>> clauses2 = result2.second;
+        for(vector<int> clause: clauses1){
+            clauses2.push_back(clause);
+        }
+        return make_pair(result2.first, clauses2);
+    }
+    //propositions array is indexed at 1
+    //Works if K >= 1 and N>=1
+    static pair<int,vector<vector<int>>> atmostKSumClauses(vector<int> propositions,int nextPropositionIndex,int K){
+
         int N = propositions.size()-1;//As it is indexed from 1, its size is N+1
+
+
         vector<vector<int>> S(N+1,vector<int>(K+1,0));
 
         for(int i=1;i<=N;i++){
@@ -75,7 +92,7 @@ class Dimacs {
         }
 
         //Condition 8 - neg(n) or neg(S[n-1][k])
-        result.push_back({-propositions[N],S[N-1][K]});
+        result.push_back({-propositions[N],-S[N-1][K]});
         
         //for 1<i<n and 1<j<=k
         //Condition 5 - neg(i) or neg(S[i-1][j-1]) or S[i][j]
@@ -83,16 +100,10 @@ class Dimacs {
         for(int i=2;i<N;i++){
             for(int j=2;j<=K;j++){
                 result.push_back({-propositions[i],-S[i-1][j-1],S[i][j]});
-                result.push_back({-S[i-1][j],-S[i][j]});
+                result.push_back({-S[i-1][j],S[i][j]});
             }
         }
 
-        //If exactly K
-
-        if(exactlyK){
-            result.push_back({S[N-1][K],S[N-1][K-1]});
-            result.push_back({S[N-1][K],propositions[N]});
-        }
         return make_pair(nextPropositionIndex, result);
     }
 
