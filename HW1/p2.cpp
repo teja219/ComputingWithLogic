@@ -7,6 +7,7 @@
 #include "dimacs.h"//Custom file for reading and writing dimacs data
 using namespace std;
 
+enum PROP_TYPE { ZERO, ONE, POSITIVE_PROP, NEGATIVE_PROP };
 
 
 int main()
@@ -17,13 +18,10 @@ int main()
     //Add an additional clause which is a disjunction of all literals
     Dimacs inputDimacs = Dimacs(1);
     //Initializing output dimacs
-    Dimacs outputDimacs = Dimacs(0);
-    outputDimacs.clauses=1;
-    outputDimacs.literals=0;
-    outputDimacs.clauseDefinitions.push_back(vector<int>(0));
-    bool tautology=false, unsatisfiable=false;
+    
     //One iteration per proposition, after each iteration we generate a literal, in ith iteration we generate 
     //either 0 || 1 || P_i || neg(P_i)
+    vector<PROP_TYPE> result(1,ZERO);
     for(int proposition=1;proposition<=inputDimacs.literals;proposition++){
         int ones=0;
         int zeroes=0;
@@ -47,8 +45,8 @@ int main()
                         if(prop<0) propNegativesPerClause++;
                      }
                  }
-                 cout<<"onesPerClause:"<<onesPerClause<<"zeroesPerClause:"<<zeroesPerClause<<endl;
-                 cout<<"propPositivesPerClause:"<<propPositivesPerClause<<"propNegativesPerClause:"<<propNegativesPerClause<<endl;
+                 // cout<<"onesPerClause:"<<onesPerClause<<"zeroesPerClause:"<<zeroesPerClause<<endl;
+                 // cout<<"propPositivesPerClause:"<<propPositivesPerClause<<"propNegativesPerClause:"<<propNegativesPerClause<<endl;
                  if(onesPerClause>0){
                      ones++;
                  }
@@ -69,45 +67,51 @@ int main()
                     zeroes++;
                  }
         }
-
+        cout<<"propPositives:"<<propPositives<<endl;
+        cout<<"propNegatives:"<<propNegatives<<endl;
+        cout<<"zeroes:"<<zeroes<<endl;
+        cout<<"ones:"<<ones<<endl;
+        PROP_TYPE p;
         if(zeroes>0){
-            unsatisfiable = true;
+            p = ZERO;
         }
         else{
             if(propPositives!=0 || propNegatives!=0){
                 if(propPositives!=0 && propNegatives!=0){
-                    unsatisfiable=true;
+                    p=ZERO;
                 }  
                 else{
-                    outputDimacs.literals++;
                     if(propPositives>0){
-                        outputDimacs.clauseDefinitions[0].push_back(outputDimacs.literals);
+                        p = POSITIVE_PROP;
                     }
                     else{
-                        outputDimacs.clauseDefinitions[0].push_back(-outputDimacs.literals);
+                        p = NEGATIVE_PROP;
                     }
                 }
             }
             else{
-                tautology = true;
+                p = ONE;
             }
         }
+        result.push_back(p);
     }
-    if(tautology){
-        cout<<"tautology"<<endl;
-        outputDimacs.literals=1;
-        outputDimacs.clauseDefinitions[0] = {1,-1};
+
+    int ones=0;
+    int zeroes=0;
+    int propPositives=0;
+    int propNegatives=0;
+
+    for(int i=1;i<=inputDimacs.literals;i++){
+        if(result[i]==ONE) ones++;
+        else if(result[i]==ZERO) zeroes++;
+        else if(result[i]==POSITIVE_PROP) propPositives++;
+        else propNegatives++;
     }
-    else if(unsatisfiable){
-        cout<<"unsatisfiable"<<endl;
-        outputDimacs.literals=1;
-        outputDimacs.clauses=2;
-        outputDimacs.clauseDefinitions[0] = {1};
-        outputDimacs.clauseDefinitions.push_back({-1});
-    }
+    
+
     // Printing the Output to output.txt file
     freopen("p2Output.dimacs", "w", stdout);
-    outputDimacs.printDimacs();
+    
 }
 
 

@@ -10,15 +10,22 @@ int main()
     // For getting input from input.txt file
     freopen("p1Input.txt", "r", stdin); 
     // Printing the Output to output.txt file
-    freopen("p1.dimacs", "w", stdout);
+    freopen("p1Output.dimacs", "w", stdout);
     //Add an additional clause which is a disjunction of all literals
     Dimacs inputDimacs = Dimacs(1);
     //Add a clause
-    inputDimacs.clauses += 1;
-    inputDimacs.clauseDefinitions.push_back(vector<int>(0));
-    ////
+    
+    vector<int> orClause;
     for(int i=1;i<=inputDimacs.literals;i++) {
-      inputDimacs.clauseDefinitions[inputDimacs.clauses].push_back(i);
+      orClause.push_back(i);
     }
-    inputDimacs.printDimacs();
+    inputDimacs.clauseDefinitions.push_back(orClause);
+    cout<<"p cnf "<<inputDimacs.literals<<" "<<inputDimacs.clauseDefinitions.size()<<endl;
+    for(vector<int> clause: inputDimacs.clauseDefinitions){
+        for(int proposition: clause){
+            cout<<to_string(proposition)+" ";
+        }
+        cout<<"0";
+        cout<<endl;
+    }
 }

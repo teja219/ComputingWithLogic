@@ -20,7 +20,7 @@ int main()
     int H_n,H_m;//Number of vertices and edges in H and G.
     H_read>>H_n>>H_m;
 
-    vector<pair<int,int>> H_e;//Edges of H
+    vector<pair<int,int>> H_e(1,make_pair(0,0));//Edges of H, one indexed, hence inserting a dummy value at the beginning
     for(int i=1;i<=H_m;i++){
         int a,b;
         H_read>>a>>b;
@@ -73,7 +73,7 @@ int main()
 		int i = H_e[k].first;
 		int j = H_e[k].second;
 		
-
+		//cout<<X[i][0]<<X[j][0]<<-Z[k]<<i<<endl;
 		clauses.push_back({
 			X[i][0],X[j][0],-Z[k]
 		});

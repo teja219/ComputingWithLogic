@@ -21,13 +21,7 @@ int main()
 
     vector<vector<int>> S(N+1,vector<int>(K+1,0));
 
-    int id = N+1;
-    for(int i=1;i<=N;i++){
-        for(int j=1;j<=K;j++){
-            S[i][j]=id;
-            id++;
-        }
-    }
+    
 
     vector<vector<int>> result;
     //Copy over the initial CNF
@@ -39,7 +33,7 @@ int main()
     for(int i=0;i<=N;i++){
         currentPropositions.push_back(i);
     }
-    pair<int,vector<vector<int>>> atMostKOutput = Dimacs(0).atmostKSumClauses(currentPropositions,N+1,K,false);
+    pair<int,vector<vector<int>>> atMostKOutput = Dimacs(0).atmostKSumClauses(currentPropositions,N+1,K);
 
     
     int nextPropositionIndex = atMostKOutput.first;
