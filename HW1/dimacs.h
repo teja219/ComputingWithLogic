@@ -45,7 +45,7 @@ class Dimacs {
         }
     }
     //indexed at 1
-    static pair<int,vector<vector<int>>> atmostKSumClauses(vector<int> propositions,int nextPropositionIndex,int K){
+    static pair<int,vector<vector<int>>> atmostKSumClauses(vector<int> propositions,int nextPropositionIndex,int K,bool exactlyK){
         int N = propositions.size()-1;//As it is indexed from 1, its size is N+1
         vector<vector<int>> S(N+1,vector<int>(K+1,0));
 
@@ -86,6 +86,14 @@ class Dimacs {
                 result.push_back({-S[i-1][j],-S[i][j]});
             }
         }
+
+        //If exactly K
+
+        if(exactlyK){
+            result.push_back({S[N-1][K],S[N-1][K-1]});
+            result.push_back({S[N-1][K],propositions[N]});
+        }
         return make_pair(nextPropositionIndex, result);
     }
+
 };

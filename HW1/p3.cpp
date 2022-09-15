@@ -39,7 +39,7 @@ int main()
     for(int i=0;i<=N;i++){
         currentPropositions.push_back(i);
     }
-    pair<int,vector<vector<int>>> atMostKOutput = Dimacs(0).atmostKSumClauses(currentPropositions,N+1,K);
+    pair<int,vector<vector<int>>> atMostKOutput = Dimacs(0).atmostKSumClauses(currentPropositions,N+1,K,false);
 
     
     int nextPropositionIndex = atMostKOutput.first;
