@@ -49,14 +49,14 @@ int main()
 
     //The partitions should be equal in size, 
     //which implies number of elments in 0th partition is N/2
-    cout<<"----\n";
+    //cout<<"----\n";
     vector<int> propositions(1,0);//Since it is 1 indexed we insert a dummy value at 0th index
     for(int i=1;i<=H_n;i++){
-    	cout<<X[i][0]<<endl;
+    //	cout<<X[i][0]<<endl;
     	propositions.push_back(X[i][0]);
     }
-    cout<<"----\n";
-	pair<int,vector<vector<int>>> result = Dimacs(0).atmostKSumClauses(propositions, nextPropositionIndex, (H_n/2), true);
+    //cout<<"----\n";
+	pair<int,vector<vector<int>>> result = Dimacs(0).equalToK(propositions, nextPropositionIndex, (H_n/2));
 	nextPropositionIndex = result.first;
 	for(vector<int> c:result.second){
 		clauses.push_back(c);
@@ -89,7 +89,7 @@ int main()
 	}
 
 	// //There should be atmost K edges which are accross partitions
-	result = Dimacs(0).atmostKSumClauses(Z, nextPropositionIndex, K, false);
+	result = Dimacs(0).atmostKSumClauses(Z, nextPropositionIndex, K);
 	nextPropositionIndex = result.first;
 	for(vector<int> c:result.second){
 		clauses.push_back(c);
