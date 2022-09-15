@@ -27,8 +27,8 @@ int main()
         int zeroes=0;
         int propPositives=0;
         int propNegatives=0;
-        cout<<"----------\n";
-        cout<<"Proposition:"<<proposition<<endl;
+        //cout<<"----------\n";
+        //cout<<"Proposition:"<<proposition<<endl;
         for(vector<int> clause: inputDimacs.clauseDefinitions){
                  int onesPerClause=0;
                  int zeroesPerClause=0;
@@ -45,8 +45,8 @@ int main()
                         if(prop<0) propNegativesPerClause++;
                      }
                  }
-                 // cout<<"onesPerClause:"<<onesPerClause<<"zeroesPerClause:"<<zeroesPerClause<<endl;
-                 // cout<<"propPositivesPerClause:"<<propPositivesPerClause<<"propNegativesPerClause:"<<propNegativesPerClause<<endl;
+                 // //cout<<"onesPerClause:"<<onesPerClause<<"zeroesPerClause:"<<zeroesPerClause<<endl;
+                 // //cout<<"propPositivesPerClause:"<<propPositivesPerClause<<"propNegativesPerClause:"<<propNegativesPerClause<<endl;
                  if(onesPerClause>0){
                      ones++;
                  }
@@ -67,10 +67,10 @@ int main()
                     zeroes++;
                  }
         }
-        cout<<"propPositives:"<<propPositives<<endl;
-        cout<<"propNegatives:"<<propNegatives<<endl;
-        cout<<"zeroes:"<<zeroes<<endl;
-        cout<<"ones:"<<ones<<endl;
+        //cout<<"propPositives:"<<propPositives<<endl;
+        //cout<<"propNegatives:"<<propNegatives<<endl;
+        //cout<<"zeroes:"<<zeroes<<endl;
+        //cout<<"ones:"<<ones<<endl;
         PROP_TYPE p;
         if(zeroes>0){
             p = ZERO;
@@ -96,6 +96,10 @@ int main()
         result.push_back(p);
     }
 
+    // for(int i=1;i<=inputDimacs.literals;i++){
+    //     cout<<result[i]<<" ";
+    // }
+    // cout<<endl;
     int ones=0;
     int zeroes=0;
     int propPositives=0;
@@ -107,11 +111,47 @@ int main()
         else if(result[i]==POSITIVE_PROP) propPositives++;
         else propNegatives++;
     }
-    
 
+    Dimacs outputDimacs = Dimacs(0);
+    if(ones>0){
+        cout<<"tautology"<<endl;
+        outputDimacs.literals=1;
+        outputDimacs.clauseDefinitions.push_back({1,-1});
+    }
+    else if(propPositives!=0 || propNegatives!=0){
+        outputDimacs.literals = inputDimacs.literals;
+        outputDimacs.clauseDefinitions = vector<vector<int>>(1,vector<int>(0));
+        outputDimacs.clauses=0;
+        for(int i=1;i<=inputDimacs.literals;i++){
+            if(result[i]==POSITIVE_PROP){
+                outputDimacs.clauseDefinitions[0].push_back(i);
+                outputDimacs.clauses++;
+            }
+            if(result[i]==NEGATIVE_PROP){
+                outputDimacs.clauseDefinitions[0].push_back(-i);
+                outputDimacs.clauses++;
+            }
+        }
+    }
+    else{
+        cout<<"unsatisfiable"<<endl;
+        outputDimacs.literals=1;
+        outputDimacs.clauses=2;
+        outputDimacs.clauseDefinitions.push_back({1});
+        outputDimacs.clauseDefinitions.push_back({-1});
+    }
+    //cout<<outputDimacs.clauses<<endl;
     // Printing the Output to output.txt file
     freopen("p2Output.dimacs", "w", stdout);
     
+    cout<<"p cnf "<<outputDimacs.literals<<" "<<outputDimacs.clauseDefinitions.size()<<endl;
+    for(vector<int> clause: outputDimacs.clauseDefinitions){
+        for(int proposition: clause){
+            cout<<to_string(proposition)+" ";
+        }
+        cout<<"0";
+        cout<<endl;
+    }
 }
 
 
