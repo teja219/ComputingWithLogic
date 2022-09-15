@@ -45,7 +45,7 @@ class Dimacs {
         }
     }
     //indexed at 1
-    pair<int,vector<vector<int>>> atmostKSumClauses(vector<int> propositions,int nextPropositionIndex,int K){
+    static pair<int,vector<vector<int>>> atmostKSumClauses(vector<int> propositions,int nextPropositionIndex,int K){
         int N = propositions.size()-1;//As it is indexed from 1, its size is N+1
         vector<vector<int>> S(N+1,vector<int>(K+1,0));
 
