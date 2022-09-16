@@ -13,7 +13,7 @@ using namespace std;
 int main()
 {
     //For getting input from input.txt file
-    ifstream H_read("graphH.txt");
+    ifstream H_read("graphH_P4.txt");
     int H_n,H_m,G_n,G_m;//Number of vertices and edges in H and G.
     H_read>>H_n>>H_m;
     vector<pair<int,int>> H_e,G_e;//Edges of H and G.
@@ -25,7 +25,7 @@ int main()
     
 
     cout<<"Read graph H inputs\n";
-    ifstream G_read("graphG.txt");
+    ifstream G_read("graphG_P4.txt");
     G_read>>G_n>>G_m;
     set<pair<int,int>> G_e_set;
     for(int i=1;i<=G_m;i++){

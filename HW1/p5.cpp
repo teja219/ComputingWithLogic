@@ -13,7 +13,7 @@ using namespace std;
 int main()
 {
  	
- 	ifstream H_read("graph.txt");
+ 	ifstream H_read("graph_P5.txt");
 
  	int K;
  	H_read>>K;
